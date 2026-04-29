@@ -1,0 +1,4 @@
+Use Eugene Yan's LLM evals writeup to build a few and test out 
+
+
+https://eugeneyan.com/writing/evals/

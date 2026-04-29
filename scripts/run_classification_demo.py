@@ -29,6 +29,7 @@ from classification import (
 
 
 OUTPUT_DIR = ROOT / "outputs_classification"
+INPUT_DIR = ROOT / "inputs_classification"
 
 
 def _ensure_matplotlib_cache() -> None:
@@ -42,6 +43,28 @@ def _markdown_table(frame: pd.DataFrame, digits: int = 4) -> str:
         if pd.api.types.is_float_dtype(formatted[column]):
             formatted[column] = formatted[column].map(lambda value: f"{value:.{digits}f}")
     return formatted.to_html(index=False, escape=False, border=0)
+
+
+def _save_dataset_input(
+    dataset_name: str,
+    x_train: np.ndarray,
+    x_test: np.ndarray,
+    y_train: np.ndarray,
+    y_test: np.ndarray,
+) -> Path:
+    feature_names = [f"feature_{index}" for index in range(x_train.shape[1])]
+    train_frame = pd.DataFrame(x_train, columns=feature_names)
+    train_frame["label"] = y_train
+    train_frame["split"] = "train"
+
+    test_frame = pd.DataFrame(x_test, columns=feature_names)
+    test_frame["label"] = y_test
+    test_frame["split"] = "test"
+
+    dataset_frame = pd.concat([train_frame, test_frame], ignore_index=True)
+    output_path = INPUT_DIR / f"{dataset_name}.csv"
+    dataset_frame.to_csv(output_path, index=False)
+    return output_path
 
 
 def build_datasets(seed: int = 7) -> dict[str, tuple[np.ndarray, np.ndarray]]:
@@ -108,6 +131,7 @@ def build_models(seed: int = 7) -> dict[str, object]:
 def run_demo() -> None:
     _ensure_matplotlib_cache()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    INPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     datasets = build_datasets()
     models = build_models()
@@ -121,6 +145,13 @@ def run_demo() -> None:
             test_size=0.35,
             random_state=17,
             stratify=labels,
+        )
+        dataset_input_path = _save_dataset_input(
+            dataset_name,
+            x_train,
+            x_test,
+            y_train,
+            y_test,
         )
 
         dataset_rows = []
@@ -183,6 +214,8 @@ def run_demo() -> None:
                 "",
                 narrative,
                 "",
+                f"Input data for this dataset: [`{dataset_name}.csv`](../inputs_classification/{dataset_input_path.name})",
+                "",
                 _markdown_table(
                     dataset_frame[
                         [
@@ -231,6 +264,7 @@ def run_demo() -> None:
             "- scalar metrics that are easy to compare",
             "- visual diagnostics that explain threshold behavior",
             "- synthetic datasets ranging from easy to genuinely messy",
+            "- persisted input datasets under `inputs_classification/` for reproducibility",
             "",
             "## Global Leaderboard",
             "",

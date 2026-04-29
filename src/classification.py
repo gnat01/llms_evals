@@ -338,15 +338,23 @@ def plot_binary_classification_report(
     axes[0, 0].legend()
     axes[0, 0].grid(alpha=0.3)
 
-    precision_curve, recall_curve, _ = metrics.precision_recall_curve(
-        np.concatenate([np.zeros_like(class_0_scores), np.ones_like(class_1_scores)]),
-        np.concatenate([class_0_scores, class_1_scores]),
+    axes[0, 1].plot(
+        threshold_metrics["threshold"],
+        threshold_metrics["precision"],
+        color="blue",
+        label="Precision",
     )
-    axes[0, 1].plot(recall_curve, precision_curve, color="#ff7f0e")
-    axes[0, 1].axhline(summary["positive_rate"], linestyle="--", color="grey")
-    axes[0, 1].set_title(f"Precision-Recall Curve (AUC={summary['pr_auc']:.3f})")
-    axes[0, 1].set_xlabel("Recall")
-    axes[0, 1].set_ylabel("Precision")
+    axes[0, 1].plot(
+        threshold_metrics["threshold"],
+        threshold_metrics["recall"],
+        color="red",
+        label="Recall",
+    )
+    axes[0, 1].axvline(summary["threshold"], linestyle="--", color="black")
+    axes[0, 1].set_title(f"Precision/Recall vs Threshold (PR-AUC={summary['pr_auc']:.3f})")
+    axes[0, 1].set_xlabel("Threshold")
+    axes[0, 1].set_ylabel("Score")
+    axes[0, 1].legend()
     axes[0, 1].grid(alpha=0.3)
 
     axes[0, 2].plot(

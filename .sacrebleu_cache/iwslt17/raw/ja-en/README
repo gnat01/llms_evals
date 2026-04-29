@@ -1,0 +1,39 @@
+IWSLT 2017 evaluation campaign: test sets for the MT Talk task 
+
+# TED
+# Copyright: TED Conference LLC
+# License: Creative Commons Attribution-NonCommercial-NoDerivs 3.0
+
+This directory includes the evaluation sets for the TED based tasks
+(Multilingual and Bilingual).
+
+For each pair x-y of languages, the xml files
+
+IWSLT17.TED.tst2017.x-y.x.xml	source to translate
+
+are provided. tst2017 files are the official test set of this edition
+of the evaluation campaign; moreover, only for the Bilingual task, the
+progressive test sets:
+
+IWSLT17.TED.tst2016.x-y.x.xml	source to translate
+
+are provided as well.
+
+IWSLT17.TED.tst2017 evaluation sets for the multilingual task consist
+of 10 TED talks, while those for the Bilingual task include 12
+different TED talks.
+
+Each talk defines a single document, for which some metadata are
+provided via the following tags, when available (mostly for TED talks):
+
+<url>:		url of the page with the text
+<keywords>: 	keywords of the talk
+<speaker>: 	speaker name
+<talkid>: 	numeric identifier of the talk
+<title>: 	title of the talk
+<description>: 	brief description of the talk
+<reviewer>:	name of the transcription/translation reviewer (possibly empty)
+<translator>:	name of the translator (possibly empty)
+
+Text is UTF8 encoded and segmented in sentences. Segments can include more
+than one sentence.

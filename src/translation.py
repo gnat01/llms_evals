@@ -131,21 +131,38 @@ def plot_translation_report(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     per_example = evaluation.per_example
     category_summary = evaluation.category_summary
+    language_summary = None
+    if "language" in per_example.columns:
+        language_summary = (
+            per_example.groupby("language")["chrf"]
+            .mean()
+            .sort_values(ascending=True)
+            .reset_index()
+            .rename(columns={"chrf": "mean_chrf"})
+        )
 
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5), constrained_layout=True)
+    fig, axes = plt.subplots(2, 2, figsize=(16, 10), constrained_layout=True)
     fig.suptitle(title, fontsize=15)
 
-    axes[0].hist(per_example["chrf"], bins=12, color="#1f77b4", alpha=0.85)
-    axes[0].set_title("Sentence chrF Distribution")
-    axes[0].set_xlabel("chrF")
-    axes[0].set_ylabel("Count")
-    axes[0].grid(alpha=0.25)
+    axes[0, 0].hist(per_example["chrf"], bins=16, color="#1f77b4", alpha=0.85)
+    axes[0, 0].set_title("Sentence chrF Distribution")
+    axes[0, 0].set_xlabel("chrF")
+    axes[0, 0].set_ylabel("Count")
+    axes[0, 0].grid(alpha=0.25)
 
     category_plot = category_summary.sort_values("mean_chrf", ascending=True)
-    axes[1].barh(category_plot["category"], category_plot["mean_chrf"], color="#2ca02c")
-    axes[1].set_title("Mean chrF By Category")
-    axes[1].set_xlabel("Mean chrF")
-    axes[1].grid(alpha=0.25, axis="x")
+    axes[0, 1].barh(category_plot["category"], category_plot["mean_chrf"], color="#2ca02c")
+    axes[0, 1].set_title("Mean chrF By Category")
+    axes[0, 1].set_xlabel("Mean chrF")
+    axes[0, 1].grid(alpha=0.25, axis="x")
+
+    if language_summary is not None:
+        axes[1, 0].barh(language_summary["language"], language_summary["mean_chrf"], color="#9467bd")
+        axes[1, 0].set_title("Mean chrF By Language")
+        axes[1, 0].set_xlabel("Mean chrF")
+        axes[1, 0].grid(alpha=0.25, axis="x")
+    else:
+        axes[1, 0].axis("off")
 
     extremes = pd.concat(
         [
@@ -158,10 +175,10 @@ def plot_translation_report(
         f"{row['id']} ({row.get('category', 'n/a')})"
         for _, row in extremes.iterrows()
     ]
-    axes[2].barh(labels, extremes["chrf"], color=["#d62728"] * 5 + ["#1f77b4"] * 5)
-    axes[2].set_title("Worst / Best Examples")
-    axes[2].set_xlabel("chrF")
-    axes[2].grid(alpha=0.25, axis="x")
+    axes[1, 1].barh(labels, extremes["chrf"], color=["#d62728"] * 5 + ["#1f77b4"] * 5)
+    axes[1, 1].set_title("Worst / Best Examples")
+    axes[1, 1].set_xlabel("chrF")
+    axes[1, 1].grid(alpha=0.25, axis="x")
 
     fig.savefig(output_path, dpi=180)
     plt.close(fig)

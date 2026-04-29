@@ -1,11 +1,11 @@
-id,category,source,reference,candidate,notes,chrf
-ex01,exact_match,Hello world,Hola mundo,Hola mundo,Exact match baseline,100.0
-ex17,german_exact,It is raining,Es regnet,Es regnet,Exact German match,100.0
-ex05,whitespace,This is important,Esto es importante,Esto  es   importante,Whitespace noise,100.0
-ex06,whitespace,Open the window,Abre la ventana, Abre la ventana ,Leading and trailing whitespace,100.0
-ex07,morphology,The girls arrived,Las chicas llegaron,Las chicas llegaron,Morphology preserved,100.0
-ex21,short_string,Yes,Si,Si,Short exact match,100.0
-ex02,exact_match,Good morning,Buenos dias,Buenos dias,Exact match baseline,100.0
-ex15,french_exact,Thank you very much,Merci beaucoup,Merci beaucoup,Exact French match,100.0
-ex16,french_near,She is ready,Elle est prete,Elle est pret,Gender agreement error,91.09666585944807
-ex04,punctuation,See you tomorrow.,Hasta manana.,Hasta manana!,Punctuation variation,89.11315536315534
+id,language,dataset,langpair,category,source,reference,candidate,notes,chrf
+mt0001,Spanish,wmt13,en-es,exact_match,"The new restrictions disproportionately affect young people, minorities and people with low incomes.","Con lo cual, las nuevas restricciones afectan de manera desproporcionada a los jóvenes, las minorías y las personas con ingresos bajos.","Con lo cual, las nuevas restricciones afectan de manera desproporcionada a los jóvenes, las minorías y las personas con ingresos bajos.",wmt13 sampled official pair with exact_match,100.0
+mt0807,Arabic,iwslt17,en-ar,exact_match,There's restricted economic activity.,هناك نشاط اقتصادي مقيد.,هناك نشاط اقتصادي مقيد.,iwslt17 sampled official pair with exact_match,100.0
+mt0165,Italian,wmt09,en-it,exact_match,"However, nor do any legal enactments prohibit the transporters from providing services.",Nessuna regolazione però vieta al trasportatore di effettuare i servizi.,Nessuna regolazione però vieta al trasportatore di effettuare i servizi.,wmt09 sampled official pair with exact_match,100.0
+mt0800,Arabic,iwslt17,en-ar,exact_match,"And I said, ""Oh, it's water in air.""","فقلت, ""ها, إنها الماء الذي في الهواء.""","فقلت, ""ها, إنها الماء الذي في الهواء.""",iwslt17 sampled official pair with exact_match,100.0
+mt0528,Turkish,wmt18,en-tr,exact_match,"Prof. Dr. Çağlar ""One shouldn’t be diving into water into which they can’t see"".","Prof. Dr. Çağlar, ""İçi görülemeyen suya balıklama atlanmamalı.""","Prof. Dr. Çağlar, ""İçi görülemeyen suya balıklama atlanmamalı.""",wmt18 sampled official pair with exact_match,100.0
+mt0793,Arabic,iwslt17,en-ar,exact_match,"Beautiful, white roots, deep, green colors and a monthly harvest.","جذور بيضاء جميلة, ألوان خضراء عميقة و حصاد شهري.","جذور بيضاء جميلة, ألوان خضراء عميقة و حصاد شهري.",iwslt17 sampled official pair with exact_match,100.0
+mt0786,Arabic,iwslt17,en-ar,exact_match,Two months?,شهرين؟,شهرين؟,iwslt17 sampled official pair with exact_match,100.0
+mt0172,Italian,wmt09,en-it,exact_match,The stuff looks weird and has a completely novel taste.,Le cose sembrano strane e hanno un sapore completamente nuovo.,Le cose sembrano strane e hanno un sapore completamente nuovo.,wmt09 sampled official pair with exact_match,100.0
+mt0779,Arabic,iwslt17,en-ar,exact_match,"But if I'm being honest, it also spread because I fought to spread it.",ولكن حتى أكون صادقًا، لقد انتشرت لأنني حاربت كي تنتشر.,ولكن حتى أكون صادقًا، لقد انتشرت لأنني حاربت كي تنتشر.,iwslt17 sampled official pair with exact_match,100.0
+mt0373,Japanese,wmt24,en-ja,partial_truncation,🙌,🙌,🙌,wmt24 sampled official pair with partial_truncation,100.0

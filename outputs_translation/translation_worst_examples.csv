@@ -1,11 +1,11 @@
-id,category,source,reference,candidate,notes,chrf
-ex22,short_string,No,No,Ni,Short mismatch,25.0
-ex14,wrong_meaning,He never called me,El nunca me llamo,El siempre me llamo,Meaning flipped,40.04843268293653
-ex20,reordered_bad,Turn left at the light,Gira a la izquierda en el semaforo,Sigue recto en el semaforo,Wrong direction,41.92722116833891
-ex09,lexical_choice,The car is fast,El coche es rapido,El auto es rapido,Alternative lexical choice,48.19978181055128
-ex10,lexical_choice,I work at home,Trabajo en casa,Trabajo desde casa,Close lexical variant,53.62474031746637
-ex11,partial_translation,Please close the door,Por favor cierra la puerta,Cierra la puerta,Partial omission,58.301981768075414
-ex13,wrong_meaning,The meeting was cancelled,La reunion fue cancelada,La reunion fue confirmada,Meaning flipped,61.44172544059535
-ex24,noisy_output,Where is the station?,Donde esta la estacion?,estacion donde esta,Word order and casing noise,63.68967100940511
-ex18,german_near,The house is small,Das Haus ist klein,Das haus ist klein,Case variation,74.37895437895436
-ex12,partial_translation,We need more time,Necesitamos mas tiempo,Necesitamos tiempo,Partial omission,74.78864349208136
+id,language,dataset,langpair,category,source,reference,candidate,notes,chrf
+mt0510,Turkish,wmt18,en-tr,middle_deletion,Two mysterious deaths,İki sır ölüm,İki ölüm,wmt18 sampled official pair with middle_deletion,31.707270855587634
+mt0353,Japanese,wmt24,en-ja,middle_deletion,@user2,@user2,@usr2,wmt24 sampled official pair with middle_deletion,35.01109262340544
+mt0416,Japanese,wmt24,en-ja,middle_deletion,Easel,イーゼル,イール,wmt24 sampled official pair with middle_deletion,38.23529411764706
+mt0404,Japanese,wmt24,en-ja,source_leakage,DETONATION,爆発,爆発 DETONATION,wmt24 sampled official pair with source_leakage,42.5
+mt0796,Arabic,iwslt17,en-ar,middle_deletion,And then we built it.,ثم صنعناه.,ثم صنناه.,iwslt17 sampled official pair with middle_deletion,43.52604613180947
+mt0153,Italian,wmt09,en-it,partial_truncation,The prices are also not among the lowest.,I prezzi non sono proprio bassissimi.,I prezzi non sono,wmt09 sampled official pair with partial_truncation,44.18796421768482
+mt0074,Spanish,wmt13,en-es,middle_deletion,You have no money?,¿No tiene dinero?,¿No dinero?,wmt13 sampled official pair with middle_deletion,45.29836976795909
+mt0146,Italian,wmt09,en-it,partial_truncation,A signal for Asian trading,Il Segnale per il commercio asiatico,Il Segnale per il,wmt09 sampled official pair with partial_truncation,45.59432166342136
+mt0734,Arabic,iwslt17,en-ar,local_reordering,Thank you so much.,شكرا جزيلا لك.,جزيشكرالا لك.,iwslt17 sampled official pair with local_reordering,47.9419191919192
+mt0377,Japanese,wmt24,en-ja,fragment_duplication,yeeee!,やったーっ！,やったーーっ！,wmt24 sampled official pair with fragment_duplication,49.282711167036176

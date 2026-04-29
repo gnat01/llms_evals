@@ -35,9 +35,26 @@ def run_demo() -> None:
 
     benchmark = pd.read_csv(INPUT_FILE)
     evaluation = evaluate_chrf(benchmark)
+    language_summary = (
+        evaluation.per_example.groupby("language")["chrf"]
+        .agg(["count", "mean", "median", "min", "max"])
+        .reset_index()
+        .rename(
+            columns={
+                "count": "num_examples",
+                "mean": "mean_chrf",
+                "median": "median_chrf",
+                "min": "min_chrf",
+                "max": "max_chrf",
+            }
+        )
+        .sort_values(["mean_chrf", "num_examples"], ascending=[False, False])
+        .reset_index(drop=True)
+    )
 
     evaluation.per_example.to_csv(OUTPUT_DIR / "translation_per_example_scores.csv", index=False)
     evaluation.category_summary.to_csv(OUTPUT_DIR / "translation_category_summary.csv", index=False)
+    language_summary.to_csv(OUTPUT_DIR / "translation_language_summary.csv", index=False)
     pd.DataFrame([evaluation.summary | {"signature": evaluation.signature}]).to_csv(
         OUTPUT_DIR / "translation_summary.csv",
         index=False,
@@ -67,11 +84,15 @@ def run_demo() -> None:
             "",
             _markdown_table(evaluation.category_summary),
             "",
+            "## Language Summary",
+            "",
+            _markdown_table(language_summary),
+            "",
             "## Best Examples",
             "",
             _markdown_table(
                 evaluation.best_examples(10)[
-                    ["id", "category", "source", "reference", "candidate", "chrf"]
+                    ["id", "language", "category", "source", "reference", "candidate", "chrf"]
                 ]
             ),
             "",
@@ -79,7 +100,7 @@ def run_demo() -> None:
             "",
             _markdown_table(
                 evaluation.worst_examples(10)[
-                    ["id", "category", "source", "reference", "candidate", "chrf"]
+                    ["id", "language", "category", "source", "reference", "candidate", "chrf"]
                 ]
             ),
             "",

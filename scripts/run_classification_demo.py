@@ -16,6 +16,7 @@ import pandas as pd
 from sklearn.datasets import make_classification, make_moons
 from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.manifold import TSNE
 from sklearn.metrics import brier_score_loss
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -65,6 +66,79 @@ def _save_dataset_input(
     output_path = INPUT_DIR / f"{dataset_name}.csv"
     dataset_frame.to_csv(output_path, index=False)
     return output_path
+
+
+def _project_dataset_for_viz(features: np.ndarray) -> tuple[np.ndarray, str]:
+    if features.shape[1] == 2:
+        return features.copy(), "raw_2d"
+
+    scaled = StandardScaler().fit_transform(features)
+    projection = TSNE(
+        n_components=2,
+        init="pca",
+        learning_rate="auto",
+        perplexity=35,
+        random_state=17,
+    ).fit_transform(scaled)
+    return projection, "tsne_2d"
+
+
+def _save_dataset_visualization(
+    dataset_name: str,
+    x_train: np.ndarray,
+    x_test: np.ndarray,
+    y_train: np.ndarray,
+    y_test: np.ndarray,
+) -> tuple[Path, Path, str]:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    features = np.vstack([x_train, x_test])
+    labels = np.concatenate([y_train, y_test])
+    splits = np.array(["train"] * len(x_train) + ["test"] * len(x_test))
+
+    projected, method = _project_dataset_for_viz(features)
+    projection_frame = pd.DataFrame(
+        {
+            "x": projected[:, 0],
+            "y": projected[:, 1],
+            "label": labels,
+            "split": splits,
+            "projection_method": method,
+        }
+    )
+    projection_csv_path = INPUT_DIR / f"{dataset_name}_projection.csv"
+    projection_frame.to_csv(projection_csv_path, index=False)
+
+    figure_path = INPUT_DIR / f"{dataset_name}_input_viz.png"
+    fig, ax = plt.subplots(figsize=(8.5, 6.5), constrained_layout=True)
+    class_colors = {0: "#1f77b4", 1: "#d62728"}
+    split_markers = {"train": "o", "test": "x"}
+
+    for split_name, marker in split_markers.items():
+        for class_label, color in class_colors.items():
+            mask = (splits == split_name) & (labels == class_label)
+            ax.scatter(
+                projected[mask, 0],
+                projected[mask, 1],
+                c=color,
+                marker=marker,
+                alpha=0.7 if split_name == "train" else 0.9,
+                s=18 if split_name == "train" else 26,
+                linewidths=0.8,
+                label=f"class {class_label} / {split_name}",
+            )
+
+    ax.set_title(f"{dataset_name} input space ({method})")
+    ax.set_xlabel("component_1")
+    ax.set_ylabel("component_2")
+    ax.grid(alpha=0.25)
+    ax.legend(loc="best", fontsize=9)
+    fig.savefig(figure_path, dpi=180)
+    plt.close(fig)
+    return figure_path, projection_csv_path, method
 
 
 def build_datasets(seed: int = 7) -> dict[str, tuple[np.ndarray, np.ndarray]]:
@@ -153,6 +227,13 @@ def run_demo() -> None:
             y_train,
             y_test,
         )
+        dataset_viz_path, dataset_projection_path, projection_method = _save_dataset_visualization(
+            dataset_name,
+            x_train,
+            x_test,
+            y_train,
+            y_test,
+        )
 
         dataset_rows = []
         dataset_narratives = []
@@ -216,6 +297,12 @@ def run_demo() -> None:
                 "",
                 f"Input data for this dataset: [`{dataset_name}.csv`](../inputs_classification/{dataset_input_path.name})",
                 "",
+                f"Input projection: [`{dataset_projection_path.name}`](../inputs_classification/{dataset_projection_path.name})",
+                "",
+                f"Input visualization method: `{projection_method}`",
+                "",
+                f"![{dataset_name} input viz](../inputs_classification/{dataset_viz_path.name})",
+                "",
                 _markdown_table(
                     dataset_frame[
                         [
@@ -265,6 +352,7 @@ def run_demo() -> None:
             "- visual diagnostics that explain threshold behavior",
             "- synthetic datasets ranging from easy to genuinely messy",
             "- persisted input datasets under `inputs_classification/` for reproducibility",
+            "- color-coded input-space visualizations for every dataset",
             "",
             "## Global Leaderboard",
             "",

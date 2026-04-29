@@ -23,14 +23,17 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from classification import (
+    confusion_matrix_frame,
     evaluate_binary_classification,
     plot_binary_classification_report,
+    plot_confusion_matrix_heatmap,
     render_narrative_summary,
 )
 
 
 OUTPUT_DIR = ROOT / "outputs_classification"
 INPUT_DIR = ROOT / "inputs_classification"
+CONFUSION_THRESHOLDS = [0.1, 0.3, 0.5, 0.7, 0.9]
 
 
 def _ensure_matplotlib_cache() -> None:
@@ -44,6 +47,10 @@ def _markdown_table(frame: pd.DataFrame, digits: int = 4) -> str:
         if pd.api.types.is_float_dtype(formatted[column]):
             formatted[column] = formatted[column].map(lambda value: f"{value:.{digits}f}")
     return formatted.to_html(index=False, escape=False, border=0)
+
+
+def _threshold_tag(threshold: float) -> str:
+    return f"{threshold:.2f}".replace(".", "p")
 
 
 def _save_dataset_input(
@@ -240,12 +247,13 @@ def run_demo() -> None:
         for model_name, model in models.items():
             model.fit(x_train, y_train)
             probabilities = model.predict_proba(x_test)[:, 1]
+            cost_fn = 5.0 if dataset_name == "imbalanced_linear" else 2.0
             evaluation = evaluate_binary_classification(
                 y_test,
                 probabilities,
                 threshold=0.5,
                 cost_fp=1.0,
-                cost_fn=5.0 if dataset_name == "imbalanced_linear" else 2.0,
+                cost_fn=cost_fn,
             )
 
             summary = evaluation.summary.copy()
@@ -276,6 +284,47 @@ def run_demo() -> None:
             fbeta_path = OUTPUT_DIR / f"{dataset_name}_{model_name}_fbeta.csv"
             evaluation.operating_points_frame(top_k=12).to_csv(operating_points_path, index=False)
             evaluation.fbeta_metrics.to_csv(fbeta_path, index=False)
+
+            for threshold_value in CONFUSION_THRESHOLDS:
+                threshold_evaluation = evaluate_binary_classification(
+                    y_test,
+                    probabilities,
+                    threshold=threshold_value,
+                    cost_fp=1.0,
+                    cost_fn=cost_fn,
+                )
+                threshold_label = _threshold_tag(threshold_value)
+                confusion_path = (
+                    OUTPUT_DIR
+                    / f"{dataset_name}_{model_name}_confusion_threshold_{threshold_label}.csv"
+                )
+                confusion_matrix_frame(threshold_evaluation.confusion).to_csv(confusion_path)
+                confusion_plot_path = (
+                    OUTPUT_DIR
+                    / f"{dataset_name}_{model_name}_confusion_threshold_{threshold_label}.png"
+                )
+                plot_confusion_matrix_heatmap(
+                    threshold_evaluation.confusion,
+                    title=f"{dataset_name} :: {model_name} :: confusion @ {threshold_value:.2f}",
+                    output_path=confusion_plot_path,
+                )
+
+            best_threshold = float(evaluation.summary["best_cost_threshold"])
+            best_cost_evaluation = evaluate_binary_classification(
+                y_test,
+                probabilities,
+                threshold=best_threshold,
+                cost_fp=1.0,
+                cost_fn=cost_fn,
+            )
+            best_confusion_path = OUTPUT_DIR / f"{dataset_name}_{model_name}_confusion_best_cost.csv"
+            confusion_matrix_frame(best_cost_evaluation.confusion).to_csv(best_confusion_path)
+            best_confusion_plot_path = OUTPUT_DIR / f"{dataset_name}_{model_name}_confusion_best_cost.png"
+            plot_confusion_matrix_heatmap(
+                best_cost_evaluation.confusion,
+                title=f"{dataset_name} :: {model_name} :: confusion @ best cost",
+                output_path=best_confusion_plot_path,
+            )
 
         dataset_frame = pd.DataFrame(dataset_rows).sort_values(
             by=["pr_auc", "js_divergence", "roc_auc"],
@@ -327,6 +376,21 @@ def run_demo() -> None:
                 "",
                 *[
                     f"![{dataset_name} {row['model']}](../outputs_classification/{dataset_name}_{row['model']}.png)"
+                    for _, row in dataset_frame.iterrows()
+                ],
+                "",
+                "### Confusion Matrices",
+                "",
+                *[
+                    "\n\n".join(
+                        [
+                            f"**{row['model']} @ threshold {threshold_value:.2f}**\n\n![{dataset_name} {row['model']} confusion threshold {threshold_value:.2f}](../outputs_classification/{dataset_name}_{row['model']}_confusion_threshold_{_threshold_tag(threshold_value)}.png)"
+                            for threshold_value in CONFUSION_THRESHOLDS
+                        ]
+                        + [
+                            f"**{row['model']} @ best-cost threshold**\n\n![{dataset_name} {row['model']} confusion best cost](../outputs_classification/{dataset_name}_{row['model']}_confusion_best_cost.png)"
+                        ]
+                    )
                     for _, row in dataset_frame.iterrows()
                 ],
                 "",

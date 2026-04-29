@@ -34,6 +34,10 @@ class BinaryClassificationEvaluation:
         )
         return frame.head(top_k).reset_index(drop=True)
 
+    def confusion_frame(self) -> pd.DataFrame:
+        """Return the chosen-threshold confusion matrix as a labeled DataFrame."""
+        return confusion_matrix_frame(self.confusion)
+
 
 def _validate_binary_inputs(
     y_true: np.ndarray,
@@ -68,6 +72,18 @@ def _confusion_counts(
     tn = int(np.sum((y_true == 0) & (y_pred == 0)))
     fn = int(np.sum((y_true == 1) & (y_pred == 0)))
     return {"tp": tp, "fp": fp, "tn": tn, "fn": fn}
+
+
+def confusion_matrix_frame(confusion: dict[str, int]) -> pd.DataFrame:
+    """Return a 2x2 labeled confusion matrix DataFrame."""
+    return pd.DataFrame(
+        [
+            [confusion["tn"], confusion["fp"]],
+            [confusion["fn"], confusion["tp"]],
+        ],
+        index=["actual_0", "actual_1"],
+        columns=["pred_0", "pred_1"],
+    )
 
 
 def _compute_histograms(
@@ -302,6 +318,59 @@ def render_narrative_summary(
         f"{distribution_story}. At threshold {chosen_row['threshold']:.3f}, precision="
         f"{chosen_row['precision']:.3f} and recall={chosen_row['recall']:.3f}; {cost_story}"
     )
+
+
+def plot_confusion_matrix_heatmap(
+    confusion: dict[str, int],
+    *,
+    title: str,
+    output_path: Path,
+) -> Path:
+    """Write a confusion-matrix heatmap with counts overlaid in each cell."""
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    frame = confusion_matrix_frame(confusion)
+    matrix = frame.to_numpy()
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(6, 5), constrained_layout=True)
+    image = ax.imshow(matrix, cmap="Blues")
+    fig.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
+
+    ax.set_xticks(np.arange(frame.shape[1]), labels=frame.columns)
+    ax.set_yticks(np.arange(frame.shape[0]), labels=frame.index)
+    ax.set_xlabel("Predicted label")
+    ax.set_ylabel("Actual label")
+    ax.set_title(title)
+
+    max_value = matrix.max() if matrix.size else 0
+    for row in range(matrix.shape[0]):
+        for col in range(matrix.shape[1]):
+            value = int(matrix[row, col])
+            text_color = "white" if value > max_value / 2 else "black"
+            ax.text(
+                col,
+                row,
+                f"{value}",
+                ha="center",
+                va="center",
+                color=text_color,
+                fontsize=14,
+                fontweight="bold",
+            )
+
+    ax.set_xticks(np.arange(-0.5, frame.shape[1], 1), minor=True)
+    ax.set_yticks(np.arange(-0.5, frame.shape[0], 1), minor=True)
+    ax.grid(which="minor", color="white", linestyle="-", linewidth=2)
+    ax.tick_params(which="minor", bottom=False, left=False)
+
+    fig.savefig(output_path, dpi=180)
+    plt.close(fig)
+    return output_path
 
 
 def plot_binary_classification_report(

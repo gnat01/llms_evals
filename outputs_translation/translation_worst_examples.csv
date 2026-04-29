@@ -1,0 +1,11 @@
+id,category,source,reference,candidate,notes,chrf
+ex22,short_string,No,No,Ni,Short mismatch,25.0
+ex14,wrong_meaning,He never called me,El nunca me llamo,El siempre me llamo,Meaning flipped,40.04843268293653
+ex20,reordered_bad,Turn left at the light,Gira a la izquierda en el semaforo,Sigue recto en el semaforo,Wrong direction,41.92722116833891
+ex09,lexical_choice,The car is fast,El coche es rapido,El auto es rapido,Alternative lexical choice,48.19978181055128
+ex10,lexical_choice,I work at home,Trabajo en casa,Trabajo desde casa,Close lexical variant,53.62474031746637
+ex11,partial_translation,Please close the door,Por favor cierra la puerta,Cierra la puerta,Partial omission,58.301981768075414
+ex13,wrong_meaning,The meeting was cancelled,La reunion fue cancelada,La reunion fue confirmada,Meaning flipped,61.44172544059535
+ex24,noisy_output,Where is the station?,Donde esta la estacion?,estacion donde esta,Word order and casing noise,63.68967100940511
+ex18,german_near,The house is small,Das Haus ist klein,Das haus ist klein,Case variation,74.37895437895436
+ex12,partial_translation,We need more time,Necesitamos mas tiempo,Necesitamos tiempo,Partial omission,74.78864349208136

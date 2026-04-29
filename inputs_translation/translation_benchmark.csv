@@ -1,0 +1,25 @@
+id,category,source,reference,candidate,notes
+ex01,exact_match,Hello world,Hola mundo,Hola mundo,Exact match baseline
+ex02,exact_match,Good morning,Buenos dias,Buenos dias,Exact match baseline
+ex03,punctuation,How are you?,Como estas?,Como estas,Punctuation dropped
+ex04,punctuation,See you tomorrow.,Hasta manana.,Hasta manana!,Punctuation variation
+ex05,whitespace,This is important,Esto es importante,Esto  es   importante,Whitespace noise
+ex06,whitespace,Open the window,Abre la ventana, Abre la ventana ,Leading and trailing whitespace
+ex07,morphology,The girls arrived,Las chicas llegaron,Las chicas llegaron,Morphology preserved
+ex08,morphology,The girl arrived,La chica llego,La chica llegada,Wrong inflection
+ex09,lexical_choice,The car is fast,El coche es rapido,El auto es rapido,Alternative lexical choice
+ex10,lexical_choice,I work at home,Trabajo en casa,Trabajo desde casa,Close lexical variant
+ex11,partial_translation,Please close the door,Por favor cierra la puerta,Cierra la puerta,Partial omission
+ex12,partial_translation,We need more time,Necesitamos mas tiempo,Necesitamos tiempo,Partial omission
+ex13,wrong_meaning,The meeting was cancelled,La reunion fue cancelada,La reunion fue confirmada,Meaning flipped
+ex14,wrong_meaning,He never called me,El nunca me llamo,El siempre me llamo,Meaning flipped
+ex15,french_exact,Thank you very much,Merci beaucoup,Merci beaucoup,Exact French match
+ex16,french_near,She is ready,Elle est prete,Elle est pret,Gender agreement error
+ex17,german_exact,It is raining,Es regnet,Es regnet,Exact German match
+ex18,german_near,The house is small,Das Haus ist klein,Das haus ist klein,Case variation
+ex19,reordered_good,We are going to the station,Vamos a la estacion,Nos vamos a la estacion,Close paraphrase
+ex20,reordered_bad,Turn left at the light,Gira a la izquierda en el semaforo,Sigue recto en el semaforo,Wrong direction
+ex21,short_string,Yes,Si,Si,Short exact match
+ex22,short_string,No,No,Ni,Short mismatch
+ex23,noisy_output,Can you help me?,Me puedes ayudar?,Me puedes ayudar por favor gracias,Overgenerated output
+ex24,noisy_output,Where is the station?,Donde esta la estacion?,estacion donde esta,Word order and casing noise

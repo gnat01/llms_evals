@@ -1,0 +1,2 @@
+chrf,num_examples,char_order,beta,lowercase,whitespace,eps_smoothing,mean_sentence_chrf,median_sentence_chrf,min_sentence_chrf,max_sentence_chrf,signature
+74.18197007346332,24,6,2,False,False,False,77.45288525175995,86.91455371379524,25.0,100.0,nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0

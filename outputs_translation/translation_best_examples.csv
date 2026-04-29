@@ -1,0 +1,11 @@
+id,category,source,reference,candidate,notes,chrf
+ex01,exact_match,Hello world,Hola mundo,Hola mundo,Exact match baseline,100.0
+ex17,german_exact,It is raining,Es regnet,Es regnet,Exact German match,100.0
+ex05,whitespace,This is important,Esto es importante,Esto  es   importante,Whitespace noise,100.0
+ex06,whitespace,Open the window,Abre la ventana, Abre la ventana ,Leading and trailing whitespace,100.0
+ex07,morphology,The girls arrived,Las chicas llegaron,Las chicas llegaron,Morphology preserved,100.0
+ex21,short_string,Yes,Si,Si,Short exact match,100.0
+ex02,exact_match,Good morning,Buenos dias,Buenos dias,Exact match baseline,100.0
+ex15,french_exact,Thank you very much,Merci beaucoup,Merci beaucoup,Exact French match,100.0
+ex16,french_near,She is ready,Elle est prete,Elle est pret,Gender agreement error,91.09666585944807
+ex04,punctuation,See you tomorrow.,Hasta manana.,Hasta manana!,Punctuation variation,89.11315536315534

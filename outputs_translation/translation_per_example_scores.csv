@@ -1,0 +1,25 @@
+id,category,source,reference,candidate,notes,chrf
+ex01,exact_match,Hello world,Hola mundo,Hola mundo,Exact match baseline,100.0
+ex02,exact_match,Good morning,Buenos dias,Buenos dias,Exact match baseline,100.0
+ex03,punctuation,How are you?,Como estas?,Como estas,Punctuation dropped,88.39782765520151
+ex04,punctuation,See you tomorrow.,Hasta manana.,Hasta manana!,Punctuation variation,89.11315536315534
+ex05,whitespace,This is important,Esto es importante,Esto  es   importante,Whitespace noise,100.0
+ex06,whitespace,Open the window,Abre la ventana, Abre la ventana ,Leading and trailing whitespace,100.0
+ex07,morphology,The girls arrived,Las chicas llegaron,Las chicas llegaron,Morphology preserved,100.0
+ex08,morphology,The girl arrived,La chica llego,La chica llegada,Wrong inflection,85.43127977238899
+ex09,lexical_choice,The car is fast,El coche es rapido,El auto es rapido,Alternative lexical choice,48.19978181055128
+ex10,lexical_choice,I work at home,Trabajo en casa,Trabajo desde casa,Close lexical variant,53.62474031746637
+ex11,partial_translation,Please close the door,Por favor cierra la puerta,Cierra la puerta,Partial omission,58.301981768075414
+ex12,partial_translation,We need more time,Necesitamos mas tiempo,Necesitamos tiempo,Partial omission,74.78864349208136
+ex13,wrong_meaning,The meeting was cancelled,La reunion fue cancelada,La reunion fue confirmada,Meaning flipped,61.44172544059535
+ex14,wrong_meaning,He never called me,El nunca me llamo,El siempre me llamo,Meaning flipped,40.04843268293653
+ex15,french_exact,Thank you very much,Merci beaucoup,Merci beaucoup,Exact French match,100.0
+ex16,french_near,She is ready,Elle est prete,Elle est pret,Gender agreement error,91.09666585944807
+ex17,german_exact,It is raining,Es regnet,Es regnet,Exact German match,100.0
+ex18,german_near,The house is small,Das Haus ist klein,Das haus ist klein,Case variation,74.37895437895436
+ex19,reordered_good,We are going to the station,Vamos a la estacion,Nos vamos a la estacion,Close paraphrase,88.49050334702365
+ex20,reordered_bad,Turn left at the light,Gira a la izquierda en el semaforo,Sigue recto en el semaforo,Wrong direction,41.92722116833891
+ex21,short_string,Yes,Si,Si,Short exact match,100.0
+ex22,short_string,No,No,Ni,Short mismatch,25.0
+ex23,noisy_output,Can you help me?,Me puedes ayudar?,Me puedes ayudar por favor gracias,Overgenerated output,74.93866197661687
+ex24,noisy_output,Where is the station?,Donde esta la estacion?,estacion donde esta,Word order and casing noise,63.68967100940511
